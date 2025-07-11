@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reddit Sentiment Analysis</title>
+    <style>
+        /* Base Styles */
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background-color: #fff;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        h1 {
+            color: #FF4500; /* Reddit's primary red color */
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        form {
+            margin-bottom: 30px;
+            max-width: 600px;
+            width: 100%;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border: 1px solid #ddd;
+        }
+
+        label {
+            font-size: 1.1em;
+            margin-right: 10px;
+            color: #333;
+        }
+
+        input[type="text"], input[type="number"] {
+            padding: 10px;
+            margin: 10px 0;
+            width: 100%;
+            max-width: 400px;
+            font-size: 1em;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        button {
+            padding: 12px 20px;
+            font-size: 1.1em;
+            cursor: pointer;
+            background-color: #FF4500; /* Reddit red */
+            color: white;
+            border: none;
+            border-radius: 5px;
+            width: 100%;
+            max-width: 150px;
+            margin-top: 10px;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #FF3700; /* Slightly darker red */
+        }
+
+        h2, h3 {
+            color: #333;
+            margin-top: 40px;
+            text-align: center;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            border: 1px solid #ddd;
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+
+        ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+
+        li {
+            background-color: #fff;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            font-size: 1em;
+        }
+
+        strong {
+            font-size: 1.1em;
+        }
+
+        /* Media Queries for Responsive Design */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 1.8em;
+            }
+
+            form {
+                width: 90%;
+                padding: 15px;
+            }
+
+            label, input, button {
+                width: 100%;
+            }
+
+            button {
+                font-size: 1em;
+                padding: 10px 15px;
+            }
+
+            h2, h3 {
+                font-size: 1.5em;
+            }
+        }
+
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 1.6em;
+            }
+
+            form {
+                width: 95%;
+                padding: 10px;
+            }
+
+            label, input, button {
+                width: 100%;
+            }
+
+            button {
+                font-size: 1em;
+                padding: 8px 12px;
+            }
+
+            h2, h3 {
+                font-size: 1.4em;
+            }
+
+            li {
+                font-size: 0.9em;
+                padding: 12px;
+            }
+        }
+
+        /* Add Reddit Logo */
+        .logo {
+            max-width: 150px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <!-- Reddit Logo -->
+        <img src="https://logos-download.com/wp-content/uploads/2016/06/Reddit_logo_full_2.png" alt="Reddit Logo" class="logo">
+
+        <h1>Reddit Sentiment Analysis</h1>
+
+        <!-- Form to submit topic and number of records -->
+        <form method="POST" action="{{ url_for('sentiment.analyze_sentiment_route') }}">
+            <label for="topic">Topic:</label>
+            <input type="text" id="topic" name="topic" required><br><br>
+
+            <label for="num_records">Total Records:</label>
+            <input type="number" id="num_records" name="num_records" required><br><br>
+
+            <button type="submit">Submit</button>
+        </form>
+
+        <!-- Sentiment Analysis Results -->
+        {% if topic %}
+            <h2>Sentiment Analysis Results for "{{ topic }}"</h2>
+
+            <!-- Display Sentiment Bar Chart -->
+            <h3>Sentiment Bar Chart</h3>
+            <img src="data:image/png;base64,{{ bar_chart_b64 }}" alt="Sentiment Bar Chart">
+
+            <!-- Display Sentiment Word Cloud -->
+            <h3>Sentiment Word Cloud</h3>
+            <img src="data:image/png;base64,{{ word_cloud_b64 }}" alt="Sentiment Word Cloud">
+
+            <!-- Display Latest Reddit Posts with Sentiment Analysis -->
+            <h3>Latest Reddit Posts</h3>
+            <ul>
+                {% for post in sentiment_results %}
+                    <li><strong>{{ post.title }}</strong> - Sentiment: {{ post.sentiment }} (Score: {{ post.score }})</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    </div>
+</body>
+</html>

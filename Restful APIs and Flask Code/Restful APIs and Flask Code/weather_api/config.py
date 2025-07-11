@@ -1,0 +1,5 @@
+API_KEY='380c55b999b2b45e12fff19a15daf0d9'
+CITY='London'
+CSV_FILE = 'weather_data.csv'
+EXCEL_FILE = 'weather_data.xlsx'
+XML_FILE = 'weather_data.xml'
